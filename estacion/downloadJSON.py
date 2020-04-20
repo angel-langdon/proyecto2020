@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 import os, json
 import pytz
-from datetime import datetime
+from datetime import datetime,timedelta
 from pyproj import Proj, transform
 from pyproj import Transformer
 import shutil
@@ -49,6 +49,7 @@ def downloadJSON():#Esta función descarga los datos y los guarda en csv.
         valor = valor/1000
         valor += 3600                 #le sumamos una hora en segundos para pasarlo a hora espanyola 
         buen_valor = datetime.fromtimestamp(valor)
+        buen_valor = buen_valor + timedelta(hours=1)
         current_time = buen_valor.strftime("%m-%d-%Y_%H-%M-%S")
         current_time = str(current_time)
         final = final.drop(['parametros','mediciones','gid', 'fecha_carga'],axis=1) #quitamos las columnas que no necesitamos
