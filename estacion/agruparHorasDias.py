@@ -56,12 +56,7 @@ def unificarFicheros(fichero_final,dataframe):
         lectura_actual = list(dataframe[variable])
         lectura_fichero_final = list(fichero_final[variable])
         for j,lectura in enumerate(lectura_actual):
-            if not math.isnan(lectura):
-                if not math.isnan(lectura_fichero_final[j]):
-                    lectura_fichero_final[j] = (lectura + lectura_fichero_final[j])
-                else:
-                    lectura_fichero_final[j] = lectura
-
+            lectura_fichero_final[j] = (lectura_fichero_final[j]+" "+lectura_actual[j])
         fichero_final[variable] = lectura_fichero_final
     
     lectura_actual = list(dataframe["calidad_ambiental"])
@@ -76,11 +71,25 @@ def unificarFicheros(fichero_final,dataframe):
     fichero_final["calidad_ambiental"] = lectura_fichero_final
     return fichero_final
     
-def getMedias(fichero_final,contador_ficheros):
+def getMedias(fichero_final):
     keeps = ["so2","no2","o3","co","pm10","pm25"]
     for variable in keeps:
         lectura_fichero_final = list(fichero_final[variable])
-        fichero_final[variable] = [i/contador_ficheros  if not math.isnan(i) else i for i in lectura_fichero_final ]
+        lectura_fichero_final = [str(valor) for valor in lectura_fichero_final]
+        for j,valores in enumerate(lectura_fichero_final):
+            valores = valores.split()
+            if "nan" in valores:
+                while "nan" in valores:
+                    valores.remove("nan")
+            valores = [float(valor) for valor in valores]
+
+            total = sum(valores)
+            cantidad = len(valores)
+            if cantidad == 0:
+                lectura_fichero_final[j] = None
+            else:
+                lectura_fichero_final[j] = total/cantidad
+        fichero_final[variable] = lectura_fichero_final
     
     lectura_fichero_final = list(fichero_final["calidad_ambiental"])
     for j,lectura in enumerate(lectura_fichero_final):
