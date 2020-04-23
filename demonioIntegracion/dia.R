@@ -1,15 +1,15 @@
-# Script para leer el ˙tlimo fichero de estaciÛn e 
+# Script para leer el √∫tlimo fichero de estaci√≥n e 
 # integrarlo con el fichero correspondiente de tramos
 
 # Granulo: horas
-# Dificultad: f·cil
+# Dificultad: f√°cil
 
 library(lubridate)
 library(readxl)
 library(dplyr)
 
 ultimaEstacion = function(indice = 0){
-  #Obtenemos la ruta de la estaciÛn m·s reciente
+  #Obtenemos la ruta de la estaci√≥n m√°s reciente
   ruta_estacion = "/root/proyecto2020/demonioEstacion/estacionesPorDia/"
   files = list.files(ruta_estacion)
   files = sort(files)
@@ -19,7 +19,7 @@ ultimaEstacion = function(indice = 0){
 #ultimaEstacion(1)
 
 obtenerNombreFicheroIntegrado = function(indice = 0){
-  #Obtenemos el nombre del fichero que integrar· tramos y estaciones
+  #Obtenemos el nombre del fichero que integrar√° tramos y estaciones
   nombre = strsplit(ultimaEstacion(indice),"/")
   nombre = nombre[[1]][length(nombre[[1]])]
   nombre = substr(nombre,9,nchar(nombre)-4)
@@ -111,7 +111,7 @@ moverFicheros = function(){
 
 
 obtenerTramoCorrespondiente = function(){
-  #Obtener tramo correspodiente a la estaciÛn actual
+  #Obtener tramo correspodiente a la estaci√≥n actual
   tabla_correspondencias = obtenerTablaCorrepondencias()
   fecha_estacion = obtenerFechaFormateada(obtenerFechaEstacion())
   ruta_tramo = "/root/proyecto2020/demonioEspiras/tramosPorDia/"
@@ -153,7 +153,7 @@ obtenerTramoCorrespondiente()
 
 
 
-#Para el hsitÛrico que teniamos de antes, se ha integrado de la siguiente forma:
+#Para el hsit√≥rico que teniamos de antes, se ha integrado de la siguiente forma:
 ruta_estacion = "/Users/lisagilyarovskaya/Downloads/historico_final/dias/estaciones/"
 files = list.files(ruta_estacion)
 files= sort(files, decreasing = T)
