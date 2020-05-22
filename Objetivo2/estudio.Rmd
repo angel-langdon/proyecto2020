@@ -1,0 +1,407 @@
+---
+title: "Estudio de la evolución y relación del tráfico y la contaminación en el periodo de confinamiento comparado con el mismo perido del año 2017"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+  html_notebook: default
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='Figs/',
+                      echo=T, warning=FALSE, message=FALSE,global.par = TRUE)
+```
+
+```{r,include = F}
+source("./estudio.R")
+library("corrplot")
+```
+
+## Introducción:
+
+Se va a realizar un estudio de la evolución del tráfico y la contaminación en Valencia con y sin el Coronavirus en las mismas fechas difiriendo en el año únicamente.
+
+Se dispone de los siguientes datos de tráfico:
+
+* Datos de tráfico según diferentes tramos de Valencia desde 02/05/2017 hasta el  16/05/2017 (Periodo sin confinamiento)
+
+* Datos de tráfico según diferentes tramos de Valencia desde 28/04/2020 hasta el 12/05/2020 (Periodo con confinamiento)
+
+Como se puede observar en las fechas, parece que no coinciden, pero sí lo hacen, ya que ambas fechas comienzan en Martes y terminan 2 semanas depués. Como se puede observar abajo.
+
+<center>![Figura 1.](/usr/games/trafico/valencia-esp/informes/estudioTrafico/calendario.png){#id .class width=600 height=200px}</center>
+<br>
+
+Ambos datos recogen dias no laborales y laborales.
+
+## 1. Análisis y evolución del tráfico y la contaminación
+
+### -1.1 Tráfico medio durante 15 días.
+
+Primero de todo, se realizará un pequeño análisis a grosso modo, para observar como evoluciona el tráfico en los 15 días que se han seleccionado, comparando 2017 con 2020. 
+En este caso, se mostrará un gráfico de líneas en el que el eje X representa el eje temporal (días) y, el eje Y, el número de coches promedio que pasa por un tramo en Valencia al día.
+
+```{r,echo=F}
+timeSeries1(mediaTramosDia())
+```
+
+Como era de esperar, el volúmen de tráfico durante el confinamiento disminuye una gran cantidad respecto al mismo período en 2017 sin confinamiento.
+
+
+A continuación, se analizará la tendencia de los niveles de contaminantes en los dos peridos. De esta forma, se podrá ver de forma muy  precaria alguna relación entre el tráfico y los niveles de los agentes contaminantes si es que existen.
+
+
+### -1.2 Niveles de Contaminación de agentes contaminantes:
+
+*Aclaración: todas la mediciones provienen de la estación de contaminación de la pista de Silla.*
+
+###    -1.2.1 NO2 (Dióxido de Nitrógeno)
+
+El NO2 es un agente contaminante que se produce cuando se junta el Oxígeno y el Nitrógeno a altas temperaturas. Este proceso se puede dar en motores de *combustión interna*, tormentas de rayos, lluvias ácidas, centrales de carbón, etc... 
+Este contaminante puede producir irritación en los pulmones y, como consecuencia de esto, disminuir la resistencia a infecciones respiratorias.
+
+Cuanto mayor sean los niveles de NO2 peor para la salud humana.
+
+A continuación, se mostrarán los valores de NO2 durante el perido de tiempo descrito arriba, tanto de 2017 como de 2020:
+
+```{r,echo=F}
+timeSeriesContaminantes(contaminanteDia("no2"))
+
+```
+
+Como se puede observar en la gráfica de arriba, los niveles de contaminación medio de NO2 en 2017 son 3.5 los valores de NO2 en 2020. Sigue una tendencia similar en los dos años, sin embargo, en 2017 existen valores más extremos. En concreto, en el último martes, se observa un pico más pronunciado.
+
+###    -1.2.2  PM10 (Partículas en suspensión inferiores o iguales a 10 micras por metro cúbico)
+
+El PM10 es un medidor de contaminación, en concreto determina el número de partículas en suspensión con tamaño inferior o igual a 10 micras que se encuentran en el ambiente. Éstas no suponen un gran problema para la salud siempre que sean más grandes que 2.5 micras ya que el cuerpo las puede expulsar a través de los mocos o bien, no llegan al árbol respiratorio.
+Estas partículas son creadas, principalmente en procesos de combustión.
+
+Cuanto mayor sean los niveles de PM10, peor para la salud humana.
+
+A continuación, se mostrarán los valores de PM10 durante el perido de tiempo descrito arriba, tanto de 2017 como de 2020:
+
+```{r,echo=F}
+timeSeriesContaminantes(contaminanteDia("pm10"))
+```
+
+
+Como se puede observar en la gráfica de arriba, los niveles medios de PM10 en 2017 son 2.8 los valores de PM10 en 2020. En este caso, las tendencias del PM10 no varían mucho, se puede ver como, en 2020, los niveles de PM10 casi no varían y se mantienen en valores razonables. Sin embargo, los valores de PM10 en 2017 son más altos de media y además hay ciertos valores extremos en el primer Sábado, el segundo Jueves y el segundo viernes que son muy elevados.
+
+
+###    -1.2.3  PM2.5 (Partículas en suspensión inferiores o iguales a 2.5 micras por metro cúbico)
+
+El PM2.5 es un medidor de contaminación, en concreto determina el número de partículas en suspensión con tamaño inferior o igual a 2.5 micras que se encuentran en el ambiente. Estas suponen un gran problema  ya que el cuerpo no las puede expulsar con facilidad y llegan al árbol respiratorio provocando así enfermedades respiratorias, alergias, etc...
+Estas partículas son creadas, principalmente, en procesos de combustión.
+
+Cuanto mayor sean los niveles de PM2.5, peor para la salud humana.
+
+A continuación, se mostrarán los valores de PM2.5 durante el perido de tiempo descrito arriba, tanto de 2017 como de 2020:
+
+```{r,echo=F}
+timeSeriesContaminantes(contaminanteDia("pm25"))
+```
+
+
+Como se puede observar en la gráfica de arriba, los niveles medios de PM2.5 en 2017 son 1.2 los valores de PM10 en 2020. En este caso, las tendencias del PM2.5 varían bastante, se puede ver como en 2020, los niveles de PM2.5 se mantienen bajos entre semana y aumentan una vez comienza el fin de semana. 
+Se puede observar como los niveles de PM2.5 sufren una cantidad de variaciones en ambos años. Tampoco hay grandes diferencias en ambos años, son bastante parecidos.
+
+
+
+###    -1.2.4  SO2 (Dióxido de Azufre)
+
+El SO2 es un gas incoloro e irritante contaminante del aire. Este se produce por la combustión de combustibles poco refinidos, en los cuales hay una alta presencia de azufre. Por tanto, los vehículos de hoy en día que utilizan combustibles refinados no son causantes de un efecto considerable en los niveles de SO2.
+
+Cuanto mayor sean los niveles de SO2, peor para la salud humana.
+
+A continuación, se mostrarán los valores de SO2 durante el perido de tiempo descrito arriba, tanto de 2017 como de 2020:
+
+```{r,echo=F}
+timeSeriesContaminantes(contaminanteDia("so2"))
+```
+
+En este caso se ve que el año 2017 tiene picos más elevados de SO2, pero ambos tienen la misma media aprox. Por tanto, no hay grandes diferencias entre los niveles de SO2 de 2017 y 2020.
+
+
+###    -1.2.5  O3 (Ozono)
+
+El Ozono es un gas incoloro que está presente en el aire y que puede ser perjudicial si su concentración es alta y se mantiene en el tiempo. Provoca enfermedades respiratorias.
+
+Cuanto mayor sean los niveles de O3 peor para la salud humana. Pero hay que recalcar que concentraciones bajas de este gas no producen ningún efecto sobre la salud.
+
+A continuación, se mostrarán los valores de O3 durante el perido de tiempo descrito arriba, tanto de 2017 como de 2020:
+
+```{r,echo=F}
+timeSeriesContaminantes(contaminanteDia("o3"))
+```
+
+En este caso se ve que 2020 tiene picos más altos de niveles de O3, además de que los niveles medios de O3 en 2020 son mayores que los niveles medios en 2017. Esto puede deberse a que, últimamente se está comercializando el uso de 03 para desinfectar objetos,en concreto, para eliminar copias del Coronavirus presentes en objetos.
+
+
+
+
+## 2 Relación tráfico - contaminación
+
+Relizando una pequeña investigación sobre que factores que son causantes de la contaminación en la ciudad, entoncontramos que la mayoría de las fuentes situan a los vehículos de combustión interna como los principales causantes de la contaminación. También, la mayoría de las fuentes inciden en la importancia del viento a la hora de disminuir los niveles de contaminación. Ya que a mayor velocidad del viento, el aire se *contaminado* se renueva con mayor facilidad, y las particulas contaminantes se dispersan más reduciendo así su efecto nocivo.
+Por todo esto, se ha decidio estudiar la relación entre el tráfico y la contaminación teniendo en cuenta el viento.
+
+
+Primer, se realizará un gráfico de correlación para ver si existen relaciones lineales
+
+###    -2.1 Correlación tráfico diaro, viento y nivel de agentes contaminantes del año 2020
+
+```{r,echo=F}
+correlacionTraficoContaminantesViento(2020)
+```
+
+Como se puede observar, el tráfico tiene un correlación positiva con los contaminantes no2 y so2, lo que podría indicar que a mayor número de vehículos de combustión interna, mayor serán los niveles de los contaminantes no2 y so2. También se puede ver que hay muy poca correlación entre tráfico, pm10, pm25 y o3 por lo que podría indicar que estos contaminantes no guardan relación alguna con el tráfico.
+
+También cabe destacar el papel del viento con todos los contaminantes. En este caso, todas las correlaciones son negativas, lo que podría indicar que, a mayor viento, menores son los niveles de contaminación.
+
+Por último, hay que destacar que los medidores PM10 y PM2.5 tienen una correlación positiva grande, lo que en este caso es obvio ya que ambos miden partículas en suspensión con características comunes.
+
+
+### 2.2 Modelo de regresión simple
+
+Con el fin de determinar si existe algun relación entre las variables de contaminación y el tráfico se tratará de ajustar un modelo de regresión a los datos, en el que la variable dependiente será un agente conaminante y las variables independientes serán el tráfico y el viento.
+
+### 2.2.1 Datos de entrada
+
+En este caso los niveles de contaminantes han sido tomados en la estación de contaminación de Pista de Silla y los valores de tráfico pertenecen a la media de los dos tramos más próximos a esta estación.
+Una vez cruzados los datos obtenemos el siguiente dataset (se muestran las 6 primeras filas únicamente)
+
+```{r}
+head(generarDatos("2020"))
+```
+
+Los datos están por día, por tanto, cada fila del dataset corresponde con un día. 
+Ejemplo: La fila uno nos indica que en ese día han pasado 358 coches de media por los dos tramos cercanos a la estación de Contaminación de Pista de Silla, que la velocidad del viento media ha sido de 3.3 m/s (11.88 km/h) y luego las columnas de los contaminantes, nos indican los valores medios de esos contaminantes en microgramos / metro cúbico.
+
+
+###  2.2.2 Modelo
+
+El modelo tratará de predecir los niveles de los agentes contaminantes a través de el viento y el tráfico:
+
+y = x0 + x1 + x2
+
+- Nivel Agente Contaminante = intercepto + coches/dia + viento medio
+
+#### 2.2.2.1 NO2
+
+```{r}
+{a = modeloLinealSimple(2017,"no2")
+b = modeloLinealSimple(2020,"no2")
+plotear2graficas(a,b)}
+```
+
+Gracias a las gráficas y al resumen estadístico es posible determinar que ambos modelos, tanto el de 2020 como el de 2017 son significativos puesto que sus P-valores son menores que 0.05. Además, también se puede observar como en ambos modelos la única variable significativa es el viento. Lo que indica que la única variable que guarda relación con los niveles de NO2 es el viento. Además, debido a el valor negativo de su estimador x1 = -3.31, se puede inferir que a mayor velocidad media del viento menor serán los niveles de este contaminante.
+
+
+
+#### 2.2.2.2 PM10
+
+```{r}
+{a = modeloLinealSimple(2017,"pm10")
+b = modeloLinealSimple(2020,"pm10")
+plotear2graficas(a,b)}
+```
+
+Gracias a las gráficas y al resumen estadístico es posible determinar que ambos modelos, tanto el de 2020 como el de 2017 no son significativos puesto que sus P-valores son mayores que 0.05. Además, también se puede observar que los modelos se ajustan bastante mal a los datos R-cuadrados-ajustados(0.08,0.1). Esto no implica que los valores del contaminante PM10 no dependan del viento ni del tráfico, únicamente que no guardan una relación lineal.
+
+#### 2.2.2.3 PM2.5
+
+```{r}
+source("./estudio.R")
+{a = modeloLinealSimple(2017,"pm25")
+b = modeloLinealSimple(2020,"pm25")
+plotear2graficas(a,b)}
+```
+
+Gracias a las gráficas y al resumen estadístico es posible determinar que ambos modelos, tanto el de 2020 como el de 2017 no son significativos puesto que sus P-valores son mayores que 0.05. Además, también se puede observar que los modelos se ajustan bastante mal a los datos R-cuadrados-ajustados(0.05,-0.03). Esto no implica que los valores del contaminante PM25 no dependan del viento ni del tráfico, únicamente que no guardan una relación lineal. Hay que destacar que los medidores PM10 y PM25 guadan una relación estrecha puesto que cuantifican particulas en suspensión similares, es por ello, que es razonable que obtengamos las mismas conclusiones sobre su relación con el tráfico y con el viento.
+
+
+
+#### 2.2.2.4 SO2
+
+```{r}
+source("./estudio.R")
+{a = modeloLinealSimple(2017,"so2")
+b = modeloLinealSimple(2020,"so2")
+plotear2graficas(a,b)}
+```
+
+
+Gracias a las gráficas y al resumen estadístico es posible determinar que ambos modelos, tanto el de 2020 como el de 2017 no son significativos puesto que sus P-valores son mayores que 0.05. Además, también se puede observar que los modelos se ajustan bastante mal  a los datos R-cuadrados-ajustados(-0.05,0.06). Esto no implica que los valores del contaminante SO2 no dependan del viento ni del tráfico, únicamente que no guardan una relación lineal.
+
+
+#### 2.2.2.5 O3
+
+```{r}
+source("./estudio.R")
+{a = modeloLinealSimple(2017,"o3")
+b = modeloLinealSimple(2020,"o3")
+plotear2graficas(a,b)}
+```
+
+Gracias a las gráficas y al resumen estadístico es posible determinar únicamente el modelo de  2017 es significativo puesto que su P-valores no es mayor que 0.05. Aún así, ambos modelos se ajustan bastante mal  a los datos R-cuadrados-ajustados(0.3, -0.06). En el caso de 2020 el valor de O3 guarda una únicamente relación lineal con el tráfico puesto que el valor del su parámetro es menor que 0.05. Además, gracias a su estimador que tiene signo positivo, sabemos que a mayor velocidad media del viento mayor cantidad de O3. Esto podría tener sentido, en el caso de que el viento fuese de poniente y tuviese una temperatura elevada, ya que estás condiciones favorecen la creación de O3. En el Anexo han sido adjuntadas dos noticias que hablan del tiempo caluroso y el viento de poniente en la comunidad Valencia en 2017, que podría explicar la causa de que el viento sea significativo en 2017.
+- [Notica Poniente CV I](https://www.tiempo.com/ram/339132/resumen-climatico-del-mes-mayo-2017-la-comunidad-valenciana/)
+- [Notica Poniente CV II](https://www.elperiodico.com/es/sociedad/20170506/el-112-decreta-riesgo-elevado-de-incendios-en-toda-la-provincia-de-valencia-y-el-interior-de-castellon-6020061)
+
+
+### 2.3 Partial Least Squares (PLS)
+
+Tal y como se ha observado anteriormente, el no2 tiene una correlación positiva, aunque no muy directa, con el tráfico. A continuación se van a estudiar qué factores pueden llegar a influir en la formación de dicho componente químico mediante una técnica llamada PLS, en inglés, Partial Least Squares.
+
+Esta técnica es una mezcla entre regresión múltiple y PCA. Hay que tener en cuenta que si existe multicolinealidad, la regresión puede que no se realice de forma correcta y no aparezcan los resultados deseados. Sin embargo, el PLS utiliza previamente el PCA para observar qué variables son las que más influyen en la creación de las variables que se están estudiando y cada una de las componentes es ortogonal a la siguiente que más influye y así sucesivamente. Por eso razón, gracias a que las componentes son linealmente independientes entre sí, la regresión se podrá llevar a cabo sin ningún problema.
+
+En este caso se puede observar que al aplicar el modelo, el R2 va aumentando, aunque no mucho, a lo largo de las componentes que se han obtenido. Sin embargo, con el Q2 ocurre lo contrario, va disminuyendo a partir de la segunda componente.
+
+
+```{r, echo=F}
+datos = generarDatos("2020")
+Y = datos[,2]
+X = datos[,c(1,3,4,5,6,7)]
+
+
+mypls_ = opls(x = X, y = Y, crossvalI = nrow(X), scaleC = "standard")
+mypls_ = opls(x = X, y = Y, predI = 5, crossvalI = nrow(X),
+             scaleC = "standard")
+mypls_@modelDF
+plot(1:5, mypls_@modelDF$`R2Y(cum)`, type = "o", pch = 16, col = "blue3",
+     lwd = 2, xlab = "Components", ylab = "", ylim = c(0,0.9),
+     main = "Modelo PLS: No2")
+
+lines(1:5, mypls_@modelDF$`Q2(cum)`, type = "o", pch = 16, col = "red3",
+      lwd = 2)
+
+abline(h = 0.5, col = "red3", lty = 2)
+legend("bottomleft", c("R2", "Q2"), lwd = 2, 
+       col = c("blue3", "red3"), bty = "n")
+
+```
+
+Una técnica que se usa mucho para obtener qué variables influyen más en la variable que se está prediciendo, se usa la técnica VIP, es decir, la influencia de la variable Xi en la proyección.
+
+En este caso se puede observar como el o3 y el viento son los componentes que más influyen en el componente del No2 debido a que el VIP es mayor que 1.
+
+```{r, echo=F}
+mypls_@vipVn
+barplot(sort(mypls_@vipVn, decreasing = TRUE) , main = "VIP", las = 2)
+abline(h = 1, col = 2, lty = 2)
+```
+
+A continuación se visualiza el gráfico de los pesos tanto en el espacio X como en el espacio Y para ver como se distribuyen cada uno de los regresores además de la variable que se está prediciendo, el no2.
+
+```{r, echo=F}
+plot(x = mypls_, typeVc = "xy-weight",
+     parCexN = 0.8, parCompVi = c(1, 2),
+     parPaletteVc = NA,
+     parTitleL = TRUE, parCexMetricN = NA, plotPhenoDataC = NA,
+     plotSubC = NA, fig.pdfC = NA, file.pdfC = NULL)
+```
+
+Este gráfico está muy relacionado con el gráfico VIP mostrado anteriormente. Por ejemplo, observando las posiciones de la variable Y (No2) y la posición del ozono (o3) se puede decir que, a mayor o3, menor no2 existirá debido a que la relación es inversa.
+
+
+
+Finalmente, se adjunta un gráfico que permite visualizar como es la relación interna entre los scores del espacio X (t) y los scores del espacio Y (u).
+
+```{r, echo=F}
+par(mfrow = c(1,2))
+plot(mypls_@scoreMN[,1], mypls_@uMN[,1], xlab = "t", ylab = "u",
+     main = "Component 1")
+abline(a=0, b=1, col = "grey", lty = 3)
+plot(mypls_@scoreMN[,2], mypls_@uMN[,2], xlab = "t", ylab = "u",
+     main = "Component 2")
+abline(a=0, b=1, col = "grey", lty = 3)  
+```
+
+Se puede observar que en la primera componente o dimensión, la relación interna entre ambos scores es lineal, por lo tanto, no sería necesario aplicar ninguna transformación no lineal al modelo. No obstante, en la segunda componente, la relación no es tan clara como en el caso anterior. 
+
+
+
+
+## 3 Conclusiones
+
+### 3.1 Evolución tráfico y contaminación comparando 2017 con 2020
+
+Por todo lo comentado anteriormente (Apartado 1), podemos afirmar que el tráfico y la contaminación en general ha disminiudo notablemente entre el perido de 2017 y el de 2020 (con confinamiento). Hay que recalcar, que el estudio de la evolución del tráfico y la contaminación se ha realizado de forma diaria. Esto supone que los datos están agregados y se pierde información a costa de generalizar (obtener la media de las horas). También, hay que destacar que algunos agentes contaminantes como el O3 y el SO2 han sufrido poca variación entre años. En especial, el O3, ha aumentado de 2017 a 2020, probablemente por la utlización en masa en la actualidad para desinfectar objetos.
+
+### 3.2 Relación tráfico y contaminación
+
+Por todo lo comentado anteriormente (Apartado 2), podemos afirmar que el tráfico y la contaminación no guardan una relación lineal significativa. Ya que en los modelos que se han obtenido el parámetro tráfico no era nunca significativo. Hay que recalcar que en el caso de los agentes contaminantes NO2 y PM10 el p-valor los parámetros correspondientes a el tráfico son  0.39 y 0.38 respectivamente, a pesar de que se encuentran lejos del 0.05 para ser significativos, son los p-valores más altos de todos los modelos de agentes contaminantes. Lo que indica que los contaminantes NO2 y PM10 son los que mayor relación lineal guardan con el tráfico.
+
+También, hay que destacar la significación que tiene el viento en distintos modelos lineales, como el del NO2, PM10 o el O3, en todos ellos, con una nivel de confianza mayor del 90%. Lo que indica que el viento guarda una relación lineal con estos agentes contaminantes.
+
+Por último, mencionar la relación interna que guardan entre sí ciertos contaminantes, como el SO2
+
+
+### 3.3 Conclusiones generales
+
+Como se ha visto anteriormente, ninguno de los modelos ha sido capaz de ajustarse correctamente a los datos ya que sus R cuadrados ajustados son relativamente bajos. Lo que es una posible indicación de que la contaminación depende de más variables que el tráfico o el viento, como podría ser la temperatura, el tráfico acumulado y/o el tipo de vehículos que transitan (camiones, motos, etc...). 
+Por todo esto, no es posible obtener un modelo sea capaz de estimar los agentes contaminates de forma muy aproximada, utilizando únicamente el tráfico diario y el promedio de la velocidad del viento. Son necesarias más variables explicativas.
+
+También hay que destacar que únicamente se ha estudiado las relaciones lineales, por lo que es posible que exista otro tipo de relación que no sea lineal entre el trafico y la contaminación.
+
+Y, por último, hay que tener en cuenta, que los datos de tráfico proceden de sensores de tipo espiras electromagnéticas, estos son los sensores más baratos que existen para medir el tráfico pero también los más inexactos, además de que todo el proceso de enviar datos del sensor a el servidor central puede fallar, por ello, lo datos de tráfico no son una fuente muy fiable de información para realziar modelos ni análisis..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Bibliografía:
+
+- [Información NO2 I](http://madridsalud.es/dioxido-de-nitrogeno-y-salud/)
+
+- [Información NO2 II](https://www.miteco.gob.es/es/calidad-y-evaluacion-ambiental/temas/atmosfera-y-calidad-del-aire/emisiones/prob-amb/particulas.aspx)
+
+- [Información NO2 III](http://www.cemcaq.mx/contaminacion/bioxido-de-nitrogeno-no2)
+
+- [Información PM10 y PM2.5 I](https://www.valladolid.es/es/rccava/contaminantes/material-particulado-pm10-pm2-5)
+
+- [Información PM10 y PM2.5 II](http://www.prtr-es.es/Particulas-PM10,15673,11,2007.html)
+
+- [Información SO2 I](http://www.ccsso.ca/oshanswers/chemicals/chem_profiles/sulfurdi/health_sul.html)
+
+- [Información SO2 II](http://www.cemcaq.mx/contaminacion/bioxido-de-azufre-so2)
+
+- [Información O3 I](https://www.sanitas.es/sanitas/seguros/es/particulares/biblioteca-de-salud/prevencion-salud/efectos-ozono.html)
+
+- [Información O3 II](https://www.aspozono.es/que-es-el-ozono.asp)
+
+- [Uso del O3 como desinfectante](https://www.abc.es/motor/reportajes/abci-como-funcionan-equipos-ozono-desinfectan-coches-coronavirus-202004280140_noticia.html)
+
+
+- [Notica Poniente CV I](https://www.tiempo.com/ram/339132/resumen-climatico-del-mes-mayo-2017-la-comunidad-valenciana/)
+
+- [Notica Poniente CV II](https://www.elperiodico.com/es/sociedad/20170506/el-112-decreta-riesgo-elevado-de-incendios-en-toda-la-provincia-de-valencia-y-el-interior-de-castellon-6020061)
+
+
+
+
+
+
