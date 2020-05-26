@@ -1,0 +1,326 @@
+---
+title: "Ver la evolución del tráfico y la contaminación comparando la primera parte del estado de alarma, la Fase 0 y la Fase 1 en Valencia"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+  html_notebook: default
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='Figs/',
+                      echo=T, warning=FALSE, message=FALSE,global.par = TRUE)
+```
+
+```{r,include = F}
+source("./estudio.R")
+
+```
+
+## Introducción:
+
+Se va a realizar un estudio de la evolución del tráfico y la contaminación en Valencia en las 3 etapas distintas que recientemente ha vivido el país: confinamiento, fase 0 y fase 1 del estado de alarma.
+
+Se dispone de los siguientes datos de tráfico:
+
+* Datos de tráfico según diferentes tramos de Valencia desde 27/04/2020 hasta el  3/05/2020 (Periodo de confinamiento)
+
+* Datos de tráfico según diferentes tramos de Valencia desde 04/05/2020 hasta el 10/05/2020 (Periodo de fase 0)
+
+* Datos de tráfico según diferentes tramos de Valencia desde 18/05/2020 hasta el 24/05/2020 (Periodo de fase 1)
+
+
+Se trata de 3 semanas, de lunes a domingo, en la que cada una de ellas corresponde a una de las etapas mencionadas con anterioridad.
+
+<center>![Figura 1.](/usr/games/trafico/valencia-esp/informes/estudioTrafico/calendario.png){#id .class width=600 height=200px}</center>
+
+<br>
+
+## 1. Análisis y evolución del tráfico y la contaminación
+
+### -1.1 Tráfico medio durante 7 días.
+
+Primero de todo, se realizará un pequeño análisis a grosso modo, para observar como evoluciona el tráfico en las tres semanas que se han seleccionado, comparando las distintas fases. 
+En este caso, se mostrará un gráfico de líneas en el que el eje X representa el eje temporal (días) y, el eje Y, el número de coches promedio que pasa por un tramo en Valencia al día.
+
+```{r,echo=F}
+timeSeries1(mediaTramosDia())
+```
+
+Como era de esperar, el volúmen de tráfico ha aumentado a medida que se han aplicado medidas menos restrictivas (desescalada). Hay que recalcar que hay poca diferencia entra la fase 0 y el estado de confinamiento estricto. En cambio, existe una gran diferencia, entre la fase 1 y las demás fases. Esto debe ser porque en la fase 1, se comienza a permitir los viajes en vehículos dentro de la provincia. 
+
+A continuación, se analizará la tendencia de los niveles de contaminantes en los dos peridos. De esta forma, se podrá ver como ha evolucionado la contaminación, al haber aumentado el número de coches medio que circulan por Valencia.
+
+
+### -1.2 Niveles de Contaminación de agentes contaminantes durante 7 dias:
+
+*Aclaración: todas la mediciones provienen de la media de todas las estaciones de contaminación*
+
+###    -1.2.1 NO2 (Dióxido de Nitrógeno)
+
+El NO2 es un agente contaminante que se produce cuando se junta el Oxígeno y el Nitrógeno a altas temperaturas. Este proceso se puede dar en motores de *combustión interna*, tormentas de rayos, lluvias ácidas, centrales de carbón, etc... 
+Este contaminante puede producir irritación en los pulmones y, como consecuencia de esto, disminuir la resistencia a infecciones respiratorias.
+
+Cuanto mayor sean los niveles de NO2 peor para la salud humana.
+
+A continuación, se mostrarán los valores de NO2 durante el perido de tiempo descrito arriba, de las tres semanas:
+
+```{r,echo=F}
+timeSeriesContaminantes(mediaContDia("no2"),"no2")
+
+```
+
+Como se puede observar en el gráfico, ocurre lo mismo que en el tráfico, a medida que las fases son menos restrictivas y se permite en mayor medida el libre tránsito de las personas, también lo hacen los niveles del contaminante NO2
+
+###    -1.2.2  PM10 (Partículas en suspensión inferiores o iguales a 10 micras por metro cúbico)
+
+El PM10 es un medidor de contaminación, en concreto determina el número de partículas en suspensión con tamaño inferior o igual a 10 micras que se encuentran en el ambiente. Éstas no suponen un gran problema para la salud siempre que sean más grandes que 2.5 micras ya que el cuerpo las puede expulsar a través de los mocos o bien, no llegan al árbol respiratorio.
+Estas partículas son creadas, principalmente en procesos de combustión.
+
+Cuanto mayor sean los niveles de PM10, peor para la salud humana.
+
+A continuación, se mostrarán los valores de PM10 durante el perido de tiempo descrito arriba, de las tres semanas:
+
+```{r,echo=F}
+timeSeriesContaminantes(mediaContDia("pm10"),"pm10")
+```
+
+
+Como se puede observar en la gráfica de arriba, los niveles medios de PM10 aumentan a medida que se produce la desescalada, es decir, que los valores medios en confinamiento son más pequeños que en la fase 0, y, a su vez, son más pequeños que en la fase 1. Una de las posibles razones puede ser que, a mayor actividad, de tráfico y movilidad, más se mueve el ambiente, por tanto, existirá un incremento en el número de partículas suspendidas en el aire.
+
+
+###    -1.2.3  PM2.5 (Partículas en suspensión inferiores o iguales a 2.5 micras por metro cúbico)
+
+El PM2.5 es un medidor de contaminación, en concreto determina el número de partículas en suspensión con tamaño inferior o igual a 2.5 micras que se encuentran en el ambiente. Estas suponen un gran problema  ya que el cuerpo no las puede expulsar con facilidad y llegan al árbol respiratorio provocando así enfermedades respiratorias, alergias, etc...
+Estas partículas son creadas, principalmente, en procesos de combustión.
+
+Cuanto mayor sean los niveles de PM2.5, peor para la salud humana.
+
+A continuación, se mostrarán los valores de PM2.5 durante el perido de tiempo descrito arriba, de las tres semanas:
+
+```{r,echo=F}
+timeSeriesContaminantes(mediaContDia("pm25"),"pm25")
+```
+
+
+En cuanto al pm2.5, los valores aumentan drásticamente durante las dos fases, dejando a la etapa de confinamiento con valores mucho más pequeños. En cambio, para la fase 0 y la fase 1, estas particulas siguen una proporción similar en ambas semanas. Puede ser debido a lo mismo que con el pm10.
+
+
+###    -1.2.4  SO2 (Dióxido de Azufre)
+
+El SO2 es un gas incoloro e irritante contaminante del aire. Este se produce por la combustión de combustibles poco refinidos, en los cuales hay una alta presencia de azufre. Por tanto, los vehículos de hoy en día que utilizan combustibles refinados no son causantes de un efecto considerable en los niveles de SO2.
+
+Cuanto mayor sean los niveles de SO2, peor para la salud humana.
+
+A continuación, se mostrarán los valores de SO2 durante el perido de tiempo descrito arriba, de las tres semanas:
+
+```{r,echo=F}
+timeSeriesContaminantes(mediaContDia("so2"),"so2")
+```
+
+El so2 sigue la misma tendencia que las gráficas anteriores, dejando la etapa de confinamiento con los valores más pequeños. Pero esta vez, se observa claramente como existen diferencias significativas entre la fase 0 y la fase 1, obteniendo la más reciente los valores más altos.
+
+
+###    -1.2.5  O3 (Ozono)
+
+El Ozono es un gas incoloro que está presente en el aire y que puede ser perjudicial si su concentración es alta y se mantiene en el tiempo. Provoca enfermedades respiratorias.
+
+Cuanto mayor sean los niveles de O3 peor para la salud humana. Pero hay que recalcar que concentraciones bajas de este gas no producen ningún efecto sobre la salud.
+
+A continuación, se mostrarán los valores de O3 durante el perido de tiempo descrito arriba, de las tres semanas:
+
+```{r,echo=F}
+timeSeriesContaminantes(mediaContDia("o3"),"o3")
+```
+
+La fase 1 sigue siendo la que recoge los valores más elevados, y la etapa de confinamiento los más bajos. La fase 0 sigue una tendencia un tanto extraña e irregular debida a causas desconocidas.
+
+## 1.3 Evolución tráfico y contaminación el miercoles de cada semana
+
+A continuación, estudiaremos la evolución y el contaminación del tráfico durante un día, en concreto, durante el miercoles de cada semana de cada fase.
+
+### 1.3.1 Tráfico
+
+#### 1.3.1.1 Gráfico de lineas de número de coches promedio por tramo
+```{r,echo=F}
+timeSeriesHora(mediaTramosHora())
+```
+
+En este gráfico se puede observar como el tráfico medio durante las primeras horas de un dia de 00:00 a 07:00 es bastante parecido en todas las fases, excepto en la fase 1, que como vemos es un poco superior, esto debe ser porque locales de ocio pueden cerrar más tarde, por tantom problablemente será gente que esté volviendo a sus casas.
+
+También, se observa como a medida que sucede la desescalada hay más tráfico en la hora punta de las 08:00 cuando toda la gente se va a trabajar. Esto debe ser causa de que a medida que avanzan las fases también lo han hecho el número de trabajos permitidos.
+Además se puede ver como el tráfico en la fase 1 se mantiene superior al tráfico de la fase 0 y el confinamiento. Estas dos útlimas fases siguen una tendencia muy parecida, siendo, la fase 0 un poco mayor el número de coches.
+
+Por último, se puede observar como a partir de las 17:00 cuando acaban la mayoría de los trabajos de joranada completa acaban, el número de coches que circulan es mucho mayor en la fase 1 en que las otras fases, esto debe ser porque en la fase 1 se permite la libre circulación de las personas, como se ha comentado anteriormente.
+
+
+*Aclaración: todas la mediciones provienen de la media de todas las estaciones de contaminación*
+
+###    -1.3.2 Contaminación
+
+
+#### -1.3.2.1 NO2 (Dióxido de Nitrógeno)
+
+El NO2 es un agente contaminante que se produce cuando se junta el Oxígeno y el Nitrógeno a altas temperaturas. Este proceso se puede dar en motores de *combustión interna*, tormentas de rayos, lluvias ácidas, centrales de carbón, etc... 
+Este contaminante puede producir irritación en los pulmones y, como consecuencia de esto, disminuir la resistencia a infecciones respiratorias.
+
+Cuanto mayor sean los niveles de NO2 peor para la salud humana.
+
+A continuación, se mostrarán los valores de NO2 durante el perido de tiempo descrito arriba, cada miercoles de cada semana:
+
+```{r,echo=F}
+timeSeriesContaminantesHoras(mediaContHora("no2"),"no2")
+
+```
+
+Como se puede observar en el gráfico, ocurre lo mismo que en el tráfico, a medida que las fases son menos restrictivas y se permite en mayor medida el libre tránsito de las personas, también lo hacen los niveles del contaminante NO2
+
+#### -1.3.2.2  PM10 (Partículas en suspensión inferiores o iguales a 10 micras por metro cúbico)
+
+El PM10 es un medidor de contaminación, en concreto determina el número de partículas en suspensión con tamaño inferior o igual a 10 micras que se encuentran en el ambiente. Éstas no suponen un gran problema para la salud siempre que sean más grandes que 2.5 micras ya que el cuerpo las puede expulsar a través de los mocos o bien, no llegan al árbol respiratorio.
+Estas partículas son creadas, principalmente en procesos de combustión.
+
+Cuanto mayor sean los niveles de PM10, peor para la salud humana.
+
+A continuación, se mostrarán los valores de PM10 durante el perido de tiempo descrito arriba, cada miercoles de cada semana:
+
+```{r,echo=F}
+timeSeriesContaminantesHoras(mediaContHora("pm10"),"pm10")
+```
+
+
+En cuanto a los valores de pm10 de manera horaria, se observa claramente que a medida que avanza la desescalada se produce un incremento de estas partículas en el aire.
+
+
+#### -1.3.2.3  PM2.5 (Partículas en suspensión inferiores o iguales a 2.5 micras por metro cúbico)
+
+El PM2.5 es un medidor de contaminación, en concreto determina el número de partículas en suspensión con tamaño inferior o igual a 2.5 micras que se encuentran en el ambiente. Estas suponen un gran problema  ya que el cuerpo no las puede expulsar con facilidad y llegan al árbol respiratorio provocando así enfermedades respiratorias, alergias, etc...
+Estas partículas son creadas, principalmente, en procesos de combustión.
+
+Cuanto mayor sean los niveles de PM2.5, peor para la salud humana.
+
+A continuación, se mostrarán los valores de PM2.5 durante el perido de tiempo descrito arriba, cada miercoles de cada semana:
+
+```{r,echo=F}
+timeSeriesContaminantesHoras(mediaContHora("pm25"),"pm25")
+```
+
+En cuanto al pm2.5, se observan claras diferencias entre la etapa de confinamiento y las otras 2, siendo estas últimas las que toman valores bastante parecidos.
+
+
+
+#### -1.3.2.4  SO2 (Dióxido de Azufre)
+
+El SO2 es un gas incoloro e irritante contaminante del aire. Este se produce por la combustión de combustibles poco refinidos, en los cuales hay una alta presencia de azufre. Por tanto, los vehículos de hoy en día que utilizan combustibles refinados no son causantes de un efecto considerable en los niveles de SO2.
+
+Cuanto mayor sean los niveles de SO2, peor para la salud humana.
+
+A continuación, se mostrarán los valores de SO2 durante el perido de tiempo descrito arriba, cada miercoles de cada semana:
+
+```{r,echo=F}
+timeSeriesContaminantesHoras(mediaContHora("so2"),"so2")
+```
+
+La tendencia en el so2 es parecida en esta gráfica, pero, se observa que la fase 1 mantiene los valores más altos. En cambio, la fase 0 y la etapa de confinamiento muestran comportamientos bastante similares.
+
+
+#### -1.3.2.5  O3 (Ozono)
+
+El Ozono es un gas incoloro que está presente en el aire y que puede ser perjudicial si su concentración es alta y se mantiene en el tiempo. Provoca enfermedades respiratorias.
+
+Cuanto mayor sean los niveles de O3 peor para la salud humana. Pero hay que recalcar que concentraciones bajas de este gas no producen ningún efecto sobre la salud.
+
+A continuación, se mostrarán los valores de O3 durante el perido de tiempo descrito arriba, cada miercoles de cada semana:
+
+```{r,echo=F}
+timeSeriesContaminantesHoras(mediaContHora("o3"),"o3")
+```
+
+De la misma manera que en la gráfica anterior, la fase 1 mantiene los valores más altos en ozono, dejando a las otras dos etapas tendencias muy parecidas.
+
+
+## 3 Conclusiones
+
+### 3.1 Evolución tráfico y contaminación comparando 2017 con 2020
+
+Por todo lo comentado anteriormente (Apartado 1), podemos afirmar que el tráfico y la contaminación en general ha disminiudo notablemente entre el perido de 2017 y el de 2020 (con confinamiento). Hay que recalcar, que el estudio de la evolución del tráfico y la contaminación se ha realizado de forma diaria. Esto supone que los datos están agregados y se pierde información a costa de generalizar (obtener la media de las horas). También, hay que destacar que algunos agentes contaminantes como el O3 y el SO2 han sufrido poca variación entre años. En especial, el O3, ha aumentado de 2017 a 2020, probablemente por la utlización en masa en la actualidad para desinfectar objetos.
+
+### 3.2 Relación tráfico y contaminación
+
+Por todo lo comentado anteriormente (Apartado 2), podemos afirmar que el tráfico y la contaminación no guardan una relación lineal significativa. Ya que en los modelos que se han obtenido el parámetro tráfico no era nunca significativo. Hay que recalcar que en el caso de los agentes contaminantes NO2 y PM10 el p-valor los parámetros correspondientes a el tráfico son  0.39 y 0.38 respectivamente, a pesar de que se encuentran lejos del 0.05 para ser significativos, son los p-valores más altos de todos los modelos de agentes contaminantes. Lo que indica que los contaminantes NO2 y PM10 son los que mayor relación lineal guardan con el tráfico.
+
+También, hay que destacar la significación que tiene el viento en distintos modelos lineales, como el del NO2, PM10 o el O3, en todos ellos, con una nivel de confianza mayor del 90%. Lo que indica que el viento guarda una relación lineal con estos agentes contaminantes.
+
+Por último, mencionar la relación interna que guardan entre sí ciertos contaminantes, como el SO2
+
+
+### 3.3 Conclusiones generales
+
+Como se ha visto anteriormente, ninguno de los modelos ha sido capaz de ajustarse correctamente a los datos ya que sus R cuadrados ajustados son relativamente bajos. Lo que es una posible indicación de que la contaminación depende de más variables que el tráfico o el viento, como podría ser la temperatura, el tráfico acumulado y/o el tipo de vehículos que transitan (camiones, motos, etc...). 
+Por todo esto, no es posible obtener un modelo sea capaz de estimar los agentes contaminates de forma muy aproximada, utilizando únicamente el tráfico diario y el promedio de la velocidad del viento. Son necesarias más variables explicativas.
+
+También hay que destacar que únicamente se ha estudiado las relaciones lineales, por lo que es posible que exista otro tipo de relación que no sea lineal entre el trafico y la contaminación.
+
+Y, por último, hay que tener en cuenta, que los datos de tráfico proceden de sensores de tipo espiras electromagnéticas, estos son los sensores más baratos que existen para medir el tráfico pero también los más inexactos, además de que todo el proceso de enviar datos del sensor a el servidor central puede fallar, por ello, lo datos de tráfico no son una fuente muy fiable de información para realziar modelos ni análisis..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Bibliografía:
+
+- [Información Tráfico Valéncia I](https://www.niusdiario.es/sociedad/medio-ambiente/contaminacion-provocada-trafico-cae-en-picado-ciudades-alicante-valencia-confinamiento-coronavirus_18_2941320350.html)
+
+- [Información NO2 II](https://www.miteco.gob.es/es/calidad-y-evaluacion-ambiental/temas/atmosfera-y-calidad-del-aire/emisiones/prob-amb/particulas.aspx)
+
+- [Información NO2 III](http://www.cemcaq.mx/contaminacion/bioxido-de-nitrogeno-no2)
+
+- [Información PM10 y PM2.5 I](https://www.valladolid.es/es/rccava/contaminantes/material-particulado-pm10-pm2-5)
+
+- [Información PM10 y PM2.5 II](http://www.prtr-es.es/Particulas-PM10,15673,11,2007.html)
+
+- [Información SO2 I](http://www.ccsso.ca/oshanswers/chemicals/chem_profiles/sulfurdi/health_sul.html)
+
+- [Información SO2 II](http://www.cemcaq.mx/contaminacion/bioxido-de-azufre-so2)
+
+- [Información O3 I](https://www.sanitas.es/sanitas/seguros/es/particulares/biblioteca-de-salud/prevencion-salud/efectos-ozono.html)
+
+- [Información O3 II](https://www.aspozono.es/que-es-el-ozono.asp)
+
+- [Uso del O3 como desinfectante](https://www.abc.es/motor/reportajes/abci-como-funcionan-equipos-ozono-desinfectan-coches-coronavirus-202004280140_noticia.html)
+
+
+- [Notica Poniente CV I](https://www.tiempo.com/ram/339132/resumen-climatico-del-mes-mayo-2017-la-comunidad-valenciana/)
+
+- [Notica Poniente CV II](https://www.elperiodico.com/es/sociedad/20170506/el-112-decreta-riesgo-elevado-de-incendios-en-toda-la-provincia-de-valencia-y-el-interior-de-castellon-6020061)
+
+
+
+
+
+
